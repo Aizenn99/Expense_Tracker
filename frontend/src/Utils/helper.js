@@ -1,5 +1,3 @@
-
-
 import moment from "moment";
 
 export const validateEmail = (email) => {
@@ -40,7 +38,7 @@ export const prepareExpanseBarChartData = (data = []) => {
   return chartData;
 };
 
-export const prepareIncomeBarChartData = (data=[]) => {
+export const prepareIncomeBarChartData = (data = []) => {
   const sortedData = [...data].sort(
     (a, b) => new Date(a.date) - new Date(b.date)
   );
@@ -50,5 +48,17 @@ export const prepareIncomeBarChartData = (data=[]) => {
     source: item?.source,
   }));
 
+  return chartData;
+};
+
+export const prepareExpanseLineChartData = (data = []) => {
+  const sortedData = [...data].sort(
+    (a, b) => new Date(a.date) - new Date(b.date)
+  );
+  const chartData = sortedData.map((item) => ({
+    month: moment(item?.date).format("Do MMM"),
+    amount: item?.amount,
+    category: item?.category,
+  }));
   return chartData;
 };
