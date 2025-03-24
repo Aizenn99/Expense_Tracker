@@ -1,4 +1,4 @@
-export const BASE_URL = "https://your-vercel-api.vercel.app";
+export const BASE_URL = "https://expense-tracker-backend-rw4y.onrender.com";
 
 //utils/apipaths.js
 
