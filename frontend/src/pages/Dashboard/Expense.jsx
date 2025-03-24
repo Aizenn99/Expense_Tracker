@@ -99,8 +99,30 @@ const Expense = () => {
 
   // Handle Download Income
   const handleDownloadExpenseDetails = async () => {
-    // Add your download logic here
+    try {
+      const response = await axiosInstance.get(API_PATH.EXPENSE.DOWNLOAD_EXPENSE, {
+        responseType: "blob",
+      });
+  
+      // Create a URL for the blob response
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "ExpenseDetails.xlsx");
+      document.body.appendChild(link);
+      link.click();
+  
+      // Cleanup
+      setTimeout(() => {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 100);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      toast.error("Failed to download file.");
+    }
   };
+  
 
   return (
     <DashboardLayout activeMenu="Expense">

@@ -80,28 +80,41 @@ exports.deleteExpense = async (req, res) => {
 // };
 
 exports.downloadExpenseExcel = async (req, res) => {
-  const userId = req.params.id;
+  const userId = req.user.id; // Using req.user.id to ensure authenticated user's data
   try {
-    const expense = await Expense.find({ userId }).sort({ date: -1 });
+    const expenses = await Expense.find({ userId }).sort({ date: -1 });
 
-    //preapare data for excel
-
-    const data = expense.map((item) => ({
-      amount: item.amount,
-      category: item.category,
-      icon: item.icon,
-      date: item.date,
+    // Prepare data for Excel
+    const data = expenses.map((item) => ({
+      Amount: item.amount,
+      Category: item.category,
+      Icon: item.icon,
+      Date: item.date.toISOString().split("T")[0], // Format date properly
     }));
 
+    // Create a new workbook and worksheet
     const wb = xlsx.utils.book_new();
     const ws = xlsx.utils.json_to_sheet(data);
     xlsx.utils.book_append_sheet(wb, ws, "Expense");
-    xlsx.writeFile(wb, "expense_details.xlsx");
-    res.download("expense_details.xlsx");
-    res.status(200).json({ message: "expense downloaded successfully" });
+
+    // Write to buffer instead of file
+    const buffer = xlsx.write(wb, { type: "buffer", bookType: "xlsx" });
+
+    // Set headers for file download
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=expense_details.xlsx"
+    );
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+
+    res.send(buffer);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error downloading expense", error: error.message });
+    res.status(500).json({
+      message: "Error downloading expense",
+      error: error.message,
+    });
   }
 };

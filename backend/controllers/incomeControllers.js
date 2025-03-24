@@ -78,28 +78,39 @@ exports.deleteIncome = async (req, res) => {
 // };
 
 exports.downloadIncomeExcel = async (req, res) => {
-  const userId = req.params.id;
+  const userId = req.user.id; // Use req.user.id instead of req.params.id for authentication
   try {
     const income = await Income.find({ userId }).sort({ date: -1 });
 
-    //preapare data for excel
+    if (!income || income.length === 0) {
+      return res.status(404).json({ message: "No income records found" });
+    }
 
+    // Prepare data for the Excel file
     const data = income.map((item) => ({
-      amount: item.amount,
-      source: item.source,
-      icon: item.icon,
-      date: item.date,
+      Amount: item.amount,
+      Source: item.source,
+      Icon: item.icon,
+      Date: item.date.toISOString().split("T")[0], // Format date as YYYY-MM-DD
     }));
 
+    // Create a new workbook and worksheet
     const wb = xlsx.utils.book_new();
     const ws = xlsx.utils.json_to_sheet(data);
+
+    // Append worksheet to the workbook
     xlsx.utils.book_append_sheet(wb, ws, "Income");
-    xlsx.writeFile(wb, "income_details.xlsx");
-    res.download("income_details.xlsx");
-    res.status(200).json({ message: "Income downloaded successfully" });
+
+    // Generate Excel buffer
+    const buffer = xlsx.write(wb, { type: "buffer", bookType: "xlsx" });
+
+    // Set headers for file download
+    res.setHeader("Content-Disposition", 'attachment; filename="IncomeDetails.xlsx"');
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+    // Send the Excel file as a response
+    res.status(200).send(buffer);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error downloading income", error: error.message });
+    res.status(500).json({ message: "Error downloading income", error: error.message });
   }
 };
