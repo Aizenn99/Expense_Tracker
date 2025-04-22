@@ -1,4 +1,4 @@
-export const BASE_URL = "https://expense-tracker-backend-rw4y.onrender.com";
+export const BASE_URL = import.meta.env.REACT_APP_BASE_URL || "http://localhost:5000";
 
 //utils/apipaths.js
 
