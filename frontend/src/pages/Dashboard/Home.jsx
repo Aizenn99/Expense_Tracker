@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "../../components/Layout/DashboardLayout";
 import { useUserAuth } from "../../hooks/useUserAuth";
-import axiosInstance from "../../Utils/axiosinstance";
+import axiosInstance from "../../Utils/axios";
 import { useNavigate } from "react-router-dom";
 import { API_PATH } from "../../Utils/apipath";
 import InfoCard from "../../components/Cards/InfoCard";

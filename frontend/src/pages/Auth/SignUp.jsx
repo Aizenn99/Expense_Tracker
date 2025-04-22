@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/inputs/Input";
 import ProfilePhotoSelector from "../../components/inputs/ProfilePhotoSelector";
 import { validateEmail } from "../../Utils/helper";
-import axiosInstance from "../../Utils/axiosinstance";
+import axiosInstance from "../../Utils/axios";
 import { API_PATH } from "../../Utils/apipath";
 import { UserContext } from "../../context/userContext";
 import uploadImage from "../../Utils/uploadImage";

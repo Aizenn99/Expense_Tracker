@@ -1,5 +1,5 @@
 import { API_PATH } from "./apipath";
-import axiosInstance from "./axiosinstance";
+import axiosInstance from "./axios";
 
 const uploadImage = async (imageFile) => {
   const formData = new FormData();
