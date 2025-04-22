@@ -9,6 +9,7 @@ const incomeRoutes = require("./routes/incomeRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,6 +29,8 @@ app.get("/", (req, res) => {
   res.send("API is working ✅");
 });
 
+
+
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/incomes", incomeRoutes);
 app.use("/api/v1/expenses", expenseRoutes);
@@ -35,5 +38,8 @@ app.use("/api/v1/dashboard", dashboardRoutes);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log("server is running on port " + PORT));
+const PORT = process.env.PORT ;
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is running on port ${PORT}`);
+});
