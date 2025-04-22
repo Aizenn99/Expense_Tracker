@@ -1,5 +1,4 @@
 import axios from "axios";
-import { BASE_URL } from "./apipath";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.REACT_APP_BASE_URL || "http://localhost:8000",
