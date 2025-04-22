@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "../../components/Layout/DashboardLayout";
 import IncomeOverview from "../../components/Income/IncomeOverview";
 import { API_PATH } from "../../Utils/apipath";
-import axiosInstance from "../../Utils/axiosinstance";
+import axiosInstance from "../../Utils/axios";
 import Modal from "../../components/Modal";
 import AddIncomeForm from "../../components/Income/AddIncomeForm";
 import toast from "react-hot-toast";

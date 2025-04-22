@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "../../components/Layout/DashboardLayout";
 import { useUserAuth } from "../../hooks/useUserAuth";
 import toast from "react-hot-toast";
-import axiosInstance from "../../Utils/axiosinstance";
+import axiosInstance from "../../Utils/axios";
 import { API_PATH } from "../../Utils/apipath";
 import ExpenseOverView from "../../components/Expense/ExpenseOverView";
 import Modal from "../../components/Modal";
