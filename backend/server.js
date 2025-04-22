@@ -24,6 +24,10 @@ app.use(
  
 connectDB();
 
+app.get("/", (req, res) => {
+  res.send("API is working ✅");
+});
+
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/incomes", incomeRoutes);
 app.use("/api/v1/expenses", expenseRoutes);
