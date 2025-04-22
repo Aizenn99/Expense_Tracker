@@ -1,8 +1,7 @@
 import axios from "axios";
-import { BASE_URL } from "./apipath";
 
 const axiosInstance = axios.create({
-  baseURL: BASE_URL || "http://localhost:8000",
+  baseURL: import.meta.env.REACT_APP_BASE_URL || "http://localhost:8000",
   timeout: 10000,
   headers: { "Content-Type": "application/json", Accept: "application/json" },
 });
