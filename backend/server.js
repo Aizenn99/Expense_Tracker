@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 // CORS middleware
 app.use(
   cors({
-    origin: "https://expense-tracker-23lv.onrender.com", 
+    origin: "https://expense-tracker-1-1hwb.onrender.com", 
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
