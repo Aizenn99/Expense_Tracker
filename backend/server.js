@@ -14,40 +14,65 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 
-// Middleware
+/* -------------------- MIDDLEWARE -------------------- */
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS middleware
+/* -------------------- CORS CONFIG -------------------- */
+
+// ✅ CHANGE THIS TO YOUR ACTUAL FRONTEND URL
+const allowedOrigins = [
+  "http://localhost:5173", // local frontend
+  "https://expense-tracker-1-1hwb.onrender.com", // deployed frontend
+];
+
 app.use(
   cors({
-    origin: "https://expense-tracker-1-1hwb.onrender.com", 
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: function (origin, callback) {
+      // Allow requests with no origin (Postman, mobile apps, curl)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed for this origin"));
+      }
+    },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// Connect to MongoDB
+// ✅ IMPORTANT: Handle preflight requests
+app.options("*", cors());
+
+/* -------------------- DATABASE -------------------- */
+
 connectDB();
 
-// Test route
+/* -------------------- TEST ROUTE -------------------- */
+
 app.get("/", (req, res) => {
   res.send("🚀 Expense Tracker API is up and running!");
 });
 
-// Routes
+/* -------------------- API ROUTES -------------------- */
+
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/incomes", incomeRoutes);
 app.use("/api/v1/expenses", expenseRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
 
-// Static files (uploads)
+/* -------------------- STATIC FILES -------------------- */
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Port
+/* -------------------- SERVER -------------------- */
+
 const PORT = process.env.PORT || 8000;
 
-// Start server
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`✅ Server is running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
