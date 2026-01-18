@@ -1,12 +1,11 @@
 require("dotenv").config();
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 
 const connectDB = require("./config/db");
 
-// Route imports
+// Routes
 const authRoutes = require("./routes/authRoutes");
 const incomeRoutes = require("./routes/incomeRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
@@ -19,25 +18,19 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* -------------------- CORS CONFIG -------------------- */
+/* -------------------- CORS -------------------- */
 
-// ✅ CHANGE THIS TO YOUR ACTUAL FRONTEND URL
 const allowedOrigins = [
-  "http://localhost:5173", // local frontend
-  "https://expense-tracker-1-1hwb.onrender.com", // deployed frontend
+  "http://localhost:5173",
+  "https://expense-tracker-1-1hwb.onrender.com",
 ];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (Postman, mobile apps, curl)
+    origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS not allowed for this origin"));
-      }
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error("CORS not allowed"));
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -45,18 +38,11 @@ app.use(
   })
 );
 
-// ✅ IMPORTANT: Handle preflight requests
 app.options("*", cors());
 
 /* -------------------- DATABASE -------------------- */
 
 connectDB();
-
-/* -------------------- TEST ROUTE -------------------- */
-
-app.get("/", (req, res) => {
-  res.send("🚀 Expense Tracker API is up and running!");
-});
 
 /* -------------------- API ROUTES -------------------- */
 
@@ -69,10 +55,17 @@ app.use("/api/v1/dashboard", dashboardRoutes);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+/* -------------------- FRONTEND -------------------- */
+
+app.use(express.static(path.join(__dirname, "client/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/dist/index.html"));
+});
+
 /* -------------------- SERVER -------------------- */
 
 const PORT = process.env.PORT || 8000;
-
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
